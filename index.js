@@ -2,6 +2,20 @@ const chalk = require('chalk');
 
 const fs = require('fs');
 
+
+
+function extraiLink (texto) {
+    const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
+    const arrayResultados = [];
+    let temp;
+
+    while((temp = regex.exec(texto)) !== null) {
+        arrayResultados.push({ [temp[1]]: temp[2] })
+    }
+    return arrayResultados;
+}
+
+
 function trataErro (erro) {
     throw new Error(chalk.red(erro.code, 'Não tem arquivo no caminho'));
 }
@@ -9,32 +23,11 @@ function trataErro (erro) {
 async function pegaArquivo (caminhoDoArquivo) {
     const encoding = 'utf-8';
     try {
-       const texto = await fs.readFile (caminhoDoArquivo, encoding)
-       console.log(chalk.green(texto))
-
+       const texto = await fs.promises.readFile (caminhoDoArquivo, encoding)
+       console.log(extraiLink(texto));
     } catch(erro) {
         trataErro(erro);
-    } finally {
-        console.log(chalk.yellow('Operação concluida'));
-    }
+    } 
    }
 
-// function pegaArquivo (caminhoDoArquivo) {
-//     const encoding = 'utf-8';
-//     fs.promises
-//     .readFile(caminhoDoArquivo, encoding)
-//     .then((texto) => chalk.green(console.log(texto)))
-//     .catch((erro) => trataErro(erro))
-// }
-
-// function pegaArquivo (caminhoDoArquivo) {
-//     const encoding = 'utf-8';
-//     fs.readFile(caminhoDoArquivo, encoding, (erro, texto) => {
-//         if(erro) {
-//             trataErro(erro);
-//         }
-//         console.log(chalk.green(texto));
-//     })
-// }
-
-pegaArquivo('./arquivos/');
+   pegaArquivo('./arquivos/texto1.md');

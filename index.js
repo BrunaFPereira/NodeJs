@@ -12,7 +12,7 @@ function extraiLink (texto) {
     while((temp = regex.exec(texto)) !== null) {
         arrayResultados.push({ [temp[1]]: temp[2] })
     }
-    return arrayResultados;
+    return arrayResultados.length === 0 ? 'não há links' : arrayResultados;
 }
 
 
@@ -24,10 +24,10 @@ async function pegaArquivo (caminhoDoArquivo) {
     const encoding = 'utf-8';
     try {
        const texto = await fs.promises.readFile (caminhoDoArquivo, encoding)
-       console.log(extraiLink(texto));
+       return extraiLink(texto);
     } catch(erro) {
         trataErro(erro);
     } 
    }
 
-   pegaArquivo('./arquivos/texto1.md');
+module.exports = pegaArquivo;
